@@ -1,0 +1,15 @@
+import time
+import sys
+
+my_string = "This is a sentence that I want to iterate through and print in one output"
+print("This is my string: " + my_string)
+
+my_list = my_string.split(' ')
+
+
+print((my_string).split(' '))
+time.sleep(0.2)
+
+'''for word in my_list:
+    print word,
+    time.sleep(0.2)'''
