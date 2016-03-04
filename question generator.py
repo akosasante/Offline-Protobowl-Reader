@@ -22,6 +22,28 @@ def _question_reader(curr_question):
     user_answer = raw_input("Type an answer")
     return user_answer
 
+def answer_checker(u_answer):
+    u_answer_arr = u_answer.split(' ')
+    curr_answer_arr = curr_answer.split(' ')
+    [x.lower for x in u_answer_arr]
+    for word in u_answer_arr:
+            if word.lower() in curr_answer_arr:
+                print "Correct!"
+                return
+            else:
+                print "Wrong!"
+                print "You wrote: " + u_answer
+                print "The correct answer is: " + curr_answer
+                return
+
+def continue_check():
+    cont_input = raw_input("Type 'n' for next question or 'q' to exit")
+    if cont_input == 'n':
+        return True
+    else:
+        return False
+
+
 # initiates variables for pymysql connection
 connection = pymysql.connect(host="localhost",
 user="root",
@@ -44,13 +66,13 @@ while True:
                 for row in results:
                         curr_question = _question_gen(row)
                         curr_answer = _answer_gen(row)
-                        _question_reader(curr_question)
-
-                        cont_input = raw_input("Type 'n' for next question or 'q' to exit")
-                        if cont_input == 'n':
-                                pass
+                        user_answer = _question_reader(curr_question)
+                        answer_checker(user_answer)
+                        if continue_check() == False:
+                                continue
                         else:
-                                break
+                                continue
+
         elif req_input == 'q':
                 break
         else:
@@ -61,9 +83,7 @@ while True:
 #closes database connection
 connection.close()
 
-#dealt with unicode errors using regex. 
 #continue refactoring into functions;
 #make a gui for this
 #make a regex checker for anwers
-#make it show up word by word #done!
 #make it two player
