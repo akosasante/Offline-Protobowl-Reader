@@ -15,7 +15,7 @@ cursorclass=pymysql.cursors.DictCursor)
 
 # initiates the cursor and then selects just questions from table and stores them in result.
 cursor = connection.cursor()
-sql_command = "SELECT Questions, Answers FROM trashqs ORDER BY rand()"
+sql_command = "SELECT Question, Answer FROM `terp 2 packet 1` ORDER BY rand()"
 cursor.execute(sql_command)
 
 def _fetchrow():
@@ -23,12 +23,12 @@ def _fetchrow():
     return result
 
 def _question_gen(packet_row):
-	question = packet_row[u'Questions']
+	question = packet_row[u'Question']
 	question_words = question.split(' ')
 	return question_words
 
 def _answer_gen(packet_row):
-	answer = packet_row[u'Answers']
+	answer = packet_row[u'Answer']
 	return answer
 
 class MyApp:
@@ -58,6 +58,7 @@ class MyApp:
         
     def buttonClick(self, event):
         self.stopvar = False
+        global curr_row
         curr_row = _fetchrow()
         curr_quest = _question_gen(curr_row)
         for word in curr_quest:
@@ -73,7 +74,7 @@ class MyApp:
         return self.stopvar
         
     def answerClick(self, event):
-        curr_row = _fetchrow()
+        #curr_row
         curr_answer = _answer_gen(curr_row)
         self.questionwind.insert(END, curr_answer)
     
@@ -85,3 +86,6 @@ root = Tk()
 myapp = MyApp(root)
 root.mainloop()
 
+#add keypress event to answer questions
+#add answer checker and response
+#make answer button disabled before question is pushed. 

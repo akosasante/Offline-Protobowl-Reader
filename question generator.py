@@ -4,12 +4,12 @@ import time
 import re
 
 def _question_gen(packet_row):
-	question = packet_row[u'Questions']
+	question = packet_row[u'Question']
 	question_words = question.split(' ')
 	return question_words
 
 def _answer_gen(packet_row):
-	answer = packet_row[u'Answers']
+	answer = packet_row[u'Answer']
 	return answer
 	
 def _question_reader(curr_question):
@@ -54,7 +54,7 @@ cursorclass=pymysql.cursors.DictCursor)
 
 # initiates the cursor and then selects just questions from table and stores them in result.
 cursor = connection.cursor()
-sql_command = "SELECT Questions, Answers FROM trashqs ORDER BY rand()"
+sql_command = "SELECT Question, Answer FROM `terp 2 packet 1` ORDER BY rand()"
 cursor.execute(sql_command)
 results = cursor.fetchall()
 
