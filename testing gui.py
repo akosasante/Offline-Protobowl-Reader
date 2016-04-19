@@ -49,6 +49,9 @@ class MyApp:
         self.button2.pack(side=RIGHT)
         self.button2.bind("<Button-1>", self.quitClick)
         
+        self.answerwind = Entry(self.myContainer1, width=50)
+        self.answerwind.pack()
+        
         self.questionwind = Text(self.myContainer1)
         self.questionwind.pack()
         
@@ -71,7 +74,10 @@ class MyApp:
             
     def endQ(self, event):
         self.stopvar = True
-        return self.stopvar
+        self.answerwind.focus_set()
+        
+        
+
         
     def answerClick(self, event):
         #curr_row
