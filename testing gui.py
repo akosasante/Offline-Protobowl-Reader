@@ -17,10 +17,8 @@ cursorclass=pymysql.cursors.DictCursor)
 cursor = connection.cursor()
 sql_command = "SELECT Question, Answer FROM `terp 2 packet 1` ORDER BY rand()"
 cursor.execute(sql_command)
+rows = cursor.fetchall()
 
-def _fetchrow():
-    result = cursor.fetchone()
-    return result
 
 def _question_gen(packet_row):
 	question = packet_row[u'Question']
@@ -39,7 +37,7 @@ class MyApp:
         
         self.button1 = Button(self.myContainer1, text="Display Next Question", background="green")
         self.button1.pack()
-        self.button1.bind("<Button-1>", self.buttonClick)
+        self.button1.bind("<Button-1>", self.displayQ)
         
         self.button3 = Button(self.myContainer1, text="Display Answer", background="green")
         self.button3.pack()
@@ -52,37 +50,67 @@ class MyApp:
         self.answerwind = Entry(self.myContainer1, width=50)
         self.answerwind.pack()
         
+
         self.questionwind = Text(self.myContainer1)
         self.questionwind.pack()
         
         self.myParent.bind("<space>", self.endQ)
         
-        self.stopvar = False
+        self.askquestion = False
+        self.answerQ = False
         
-    def buttonClick(self, event):
-        self.stopvar = False
-        global curr_row
-        curr_row = _fetchrow()
-        curr_quest = _question_gen(curr_row)
-        for word in curr_quest:
-            self.word = word
-            self.questionwind.insert(END, word+" ")
-            time.sleep(0.15)
-            self.myParent.update()
-            if self.stopvar == True:
-                break
+        
+        self.curr_row_id = 0
+        
+        self.question_amt = len(rows)
+        
+        
+        
+    def displayQ(self, event):
+        self.askquestion = True
+        self.curr_row = rows[self.curr_row_id]
+        if self.curr_row_id < self.question_amt:
+            self.curr_quest = _question_gen(self.curr_row)
+            while self.askquestion == True:
+                for word in self.curr_quest:
+                    self.word = word
+                    self.questionwind.insert(END, word+" ")
+                    time.sleep(0.15)
+                    self.myParent.update()
+                    
+                    
+                    while self.answerQ == True:
+                        user_ans = self.answerwind.get()
+                        curr_answer = _answer_gen(self.curr_row)
+
+                        if user_ans == curr_answer:
+                                print("correct!" + user_ans)
+                                answerQ = False
+                        elif user_ans == "":
+                                answerQ = False
+                        else:
+                                print("wrong")
+                                answerQ = False
+
+                            
+                    
+                        
+                self.askquestion = False
+                self.curr_row_id += 1
+                print self.curr_row_id
+                break        
+                    
             
     def endQ(self, event):
-        self.stopvar = True
         self.answerwind.focus_set()
+        self.answerQ = True
         
         
 
         
     def answerClick(self, event):
-        #curr_row
-        curr_answer = _answer_gen(curr_row)
-        self.questionwind.insert(END, curr_answer)
+        curr_answer = _answer_gen(self.curr_row)
+        self.questionwind.insert(END, '\n'*2 + curr_answer)
     
     def quitClick(self, event):
         self.myParent.destroy()
